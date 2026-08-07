@@ -11,7 +11,7 @@ A single failed CI run produces ~28 MB of logs across 56 jobs, of
 which 3-4 actually failed. Maintainers read those by hand to work out
 whether a red build is a real bug or a flake.
 
-## Results (20 real failures, Aug 5-7 2026)
+## Results (20 real failures, Aug 2026)
 
 | | |
 |---|---|
