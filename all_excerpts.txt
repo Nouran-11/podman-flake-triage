@@ -1,0 +1,570 @@
+======================================================================
+0 | windows machine hyperv | 18 lines
+  [TIMEDOUT] run podman API test calls [It] curl connect to machine socket
+  D:/a/podman/podman/pkg/machine/e2e/api_test.go:74
+
+Ran 75 of 88 Specs in 2977.856 seconds
+FAIL! - Suite Timeout Elapsed -- 74 Passed | 1 Failed | 0 Pending | 13 Skipped
+--- FAIL: TestMachine (2977.86s)
+FAIL
+
+Ginkgo ran 1 suite in 50m0.4379147s
+
+Test Suite Failed
+[31;1mException: [0mD:\a\podman\podman\hack\ci\win-lib.ps1:79[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  79 | [0m         [36;1mthrow "Exit code = '$exitCode' running $command at $($caller.[0m …[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mExit code = '1' running './bin/ginkgo.exe -vv --tags "remote exclude_graphdriver_btrfs containers_image_openpgp"[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1m--timeout=50m --trace --no-color   pkg/machine/e2e/.' at D:\a\podman\podman\winmake.ps1:102[0m
+##[error]Process completed with exit code 1.
+======================================================================
+1 | sys local root fedora-rawhide / lima | 30 lines
+ok 169 |090| events - pod labels in event attributes in 925ms
+ok 170 |110| podman history - basic tests in 2027ms
+ok 171 |110| podman history - custom format in 1244ms
+ok 172 |110| podman history - json in 1032ms
+ok 173 |110| podman image history Created in 857ms
+not ok 174 |125| podman import in 7086ms
+# tags: ci:parallel
+# (from function `bail-now' in file test/system/helpers.bash, line 230,
+#  from function `die' in file test/system/helpers.bash, line 958,
+#  from function `run_podman' in file test/system/helpers.bash, line 599,
+#  in test file test/system/125-import.bats, line 43)
+#   `run_podman import -q - $fqin < <(cat $archive)' failed
+#
+# [17:57:46.946482527] # /var/tmp/podman/bin/podman  run --name c-import-t174-izls94mp quay.io/libpod/testimage:20241011 sh -c echo jvv2IEd4CWrT > /random.txt
+#
+# [17:57:47.248805176] # /var/tmp/podman/bin/podman  export c-import-t174-izls94mp -o /tmp/podman_bats.P18dHq/archive.tar
+#
+# [17:57:47.719282429] # /var/tmp/podman/bin/podman  rm -t 0 -f c-import-t174-izls94mp
+# [17:57:47.854491477] c-import-t174-izls94mp
+#
+# [17:57:47.865276268] # /var/tmp/podman/bin/podman  import -q /tmp/podman_bats.P18dHq/archive.tar
+# [17:57:48.302024937] sha256:b88c839361d4221a40e977a05a2becc34ac95535182c310f346e82a9f1a33ca4
+#
+# [17:57:48.312294335] # /var/tmp/podman/bin/podman  run --rm sha256:b88c839361d4221a40e977a05a2becc34ac95535182c310f346e82a9f1a33ca4 cat /random.txt
+# [17:57:48.753717948] jvv2IEd4CWrT
+#
+# [17:57:48.765895983] # /var/tmp/podman/bin/podman  rmi -f sha256:b88c839361d4221a40e977a05a2becc34ac95535182c310f346e82a9f1a33ca4
+# [17:57:48.869823997] Deleted: b88c839361d4221a40e977a05a2becc34ac95535182c310f346e82a9f1a33ca4
+#
+# [17:57:48.884290753] # /var/tmp/podman/bin/podman  import -q -
+======================================================================
+2 | Validate source code changes | 31 lines
+  These apps are now available
+    - pre-commit
+##[group]Run make validate-source
+[36;1mmake validate-source[0m
+shell: /usr/bin/bash -e {0}
+env:
+  DEST_BRANCH: f3829809246caaa533c1af29ecf27f613d3d2fd7
+  PR_NUMBER: 29227
+  PR_HEAD: 114131aea71eb4ffc06038481ac8e86ea1513bbd
+  PR_BODY: Docker now reserves alias specfically for user-defined aliases, and uses another field, dnsnames, to hold all aliases, including container ID and name.
+ork, but this touches the cli too, since they updated it there too.
+
+
+liases field in the `podman inspect` command and in returned in calls to GET /containers/{name:.*}/json API no longer contains the short container ID, and only contains user-provided network aliases. A new field, NetworkSettings.Network.DNSNames contains all aliases, container ID and name.
+
+
+  GOTOOLCHAIN: local
+##[endgroup]
+VERSION=2.12.2 ./hack/install_golangci.sh
+golangci-lint has version 2.12.2 built with go1.26.2 from c0d3ddc9 on 2026-05-06T11:07:58Z
+Using existing /home/ubuntu/golangci-lint-2.12.2-linux-amd64/golangci-lint
+hack/golangci-lint.sh
+Linting for GOOS=linux
++ /home/ubuntu/golangci-lint-2.12.2-linux-amd64/golangci-lint run --build-tags=apparmor,seccomp,selinux
+##[error]libpod/runtime_ctr.go:12:1: File is not properly formatted (gofumpt)
+	"slices"
+^
+1 issues:
+* gofumpt: 1
+make: *** [Makefile:288: golangci-lint] Error 1
+##[error]Process completed with exit code 2.
+======================================================================
+3 | build fedora-current / lima | 31 lines
+<standard input>:1157: warning: table wider than line length minus indentation
+<standard input>:1417: warning: table wider than line length minus indentation
+<standard input>:1602: warning: table wider than line length minus indentation
+<standard input>:1786: warning: table wider than line length minus indentation
+<standard input>:1932: warning: table wider than line length minus indentation
+<standard input>:2219: warning: table wider than line length minus indentation
+<standard input>:2392: warning: table wider than line length minus indentation
+# Check if the files can be loaded by the shell
+. completions/bash/podman
+if [ -x /bin/zsh ]; then /bin/zsh completions/zsh/_podman; fi
+if [ -x /bin/fish ]; then /bin/fish completions/fish/podman.fish; fi
+hack/xref-quadlet-docs
+hack/man-page-checker
+xref-helpmsgs-manpages: 'podman build --help' lists '--authfile', which is not in docs/source/markdown/podman-build.1.md
+hack/xref-helpmsgs-manpages
+xref-helpmsgs-manpages: 'podman image build --help' lists '--authfile', which is not in docs/source/markdown/podman-build.1.md
+xref-helpmsgs-manpages: 'podman build': '--auth-file' in docs/source/markdown/podman-build.1.md, but not in --help
+xref-helpmsgs-manpages: 'podman image build': '--auth-file' in docs/source/markdown/podman-build.1.md, but not in --help
+make: *** [Makefile:632: xref-helpmsgs-manpages] Error 1
+time="2026-08-05T01:02:29Z" level=info msg="Sending SIGKILL to the qemu driver process 2978"
+time="2026-08-05T01:02:29Z" level=info msg="Sending SIGKILL to the host agent process 2955"
+time="2026-08-05T01:02:29Z" level=info msg="Removing *.pid *.sock *.tmp under \"/home/ubuntu/.lima/podman-ci\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/ha.pid\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/ha.sock\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/qemu.pid\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/qmp.sock\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/serial.sock\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/serialv.sock\""
+time="2026-08-05T01:02:29Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/ssh.sock\""
+time="2026-08-05T01:02:29Z" level=info msg="Deleted \"podman-ci\" (\"/home/ubuntu/.lima/podman-ci\")"
+##[error]Process completed with exit code 2.
+======================================================================
+4 | windows machine hyperv | 18 lines
+  [TIMEDOUT] podman machine list [It] list machine: check if running while starting
+  D:/a/podman/podman/pkg/machine/e2e/list_test.go:71
+
+Ran 50 of 88 Specs in 2952.574 seconds
+FAIL! - Suite Timeout Elapsed -- 48 Passed | 2 Failed | 0 Pending | 38 Skipped
+--- FAIL: TestMachine (2952.58s)
+FAIL
+
+Ginkgo ran 1 suite in 50m3.7263212s
+
+Test Suite Failed
+[31;1mException: [0mD:\a\podman\podman\hack\ci\win-lib.ps1:79[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  79 | [0m         [36;1mthrow "Exit code = '$exitCode' running $command at $($caller.[0m …[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mExit code = '1' running './bin/ginkgo.exe -vv --tags "remote exclude_graphdriver_btrfs containers_image_openpgp"[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1m--timeout=50m --trace --no-color   pkg/machine/e2e/.' at D:\a\podman\podman\winmake.ps1:102[0m
+##[error]Process completed with exit code 1.
+======================================================================
+5 | build fedora-current / lima | 31 lines
+##[start-action display=Set up QEMU;id=lima.setup-qemu]
+##[group]Run set -eux -o pipefail
+[36;1mset -eux -o pipefail[0m
+[36;1m[ "$(uname)" = "Linux" ][0m
+[36;1m[ "$(uname -m)" = "x86_64" ][0m
+[36;1msudo apt-get update -qq[0m
+[36;1msudo apt-get install -qqy --no-install-recommends ovmf qemu-system-x86 qemu-utils[0m
+[36;1msudo modprobe kvm[0m
+[36;1m# `sudo usermod -aG kvm $(whoami)` does not take an effect on GHA[0m
+[36;1msudo chown $(whoami) /dev/kvm[0m
+shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+##[endgroup]
+++ uname
++ '[' Linux = Linux ']'
+++ uname -m
++ '[' x86_64 = x86_64 ']'
++ sudo apt-get update -qq
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/noble-updates/main/binary-amd64/Packages.xz  File has unexpected size (1174064 != 1180900). Mirror sync in progress? [IP: 91.189.91.83 80]
+   Hashes of expected file:
+    - Filesize:1180900 [weak]
+    - SHA256:98e15bf87a2f97331e8d775519fd761a42e9b194b91dc827301495e413c72918
+    - SHA1:d3b17edfa5be1d5aafa13bbfd867e9ade298ddc5 [weak]
+    - MD5Sum:2a5f98844e574715a89c343b683f4ae7 [weak]
+   Release file created at: Wed, 05 Aug 2026 10:31:04 +0000
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/noble-updates/main/i18n/Translation-en.xz  
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/noble-updates/restricted/binary-amd64/Packages.xz  
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/noble-updates/restricted/i18n/Translation-en.xz  
+E: Some index files failed to download. They have been ignored, or old ones used instead.
+##[error]Process completed with exit code 100.
+======================================================================
+6 | int remote rootless fedora-current / lima | 28 lines
+------------------------------
+make[1]: *** [Makefile:697: ginkgo-run] Error 1
+make: *** [Makefile:710: ginkgo-remote] Error 2
+
+Summarizing 1 Failure:
+  [FAIL] Podman build [It] podman build with a secret from file
+  /var/tmp/podman/test/e2e/build_test.go:116
+
+Ran 2196 of 2531 Specs in 573.299 seconds
+FAIL! -- 2195 Passed | 1 Failed | 0 Pending | 335 Skipped
+
+
+Ginkgo ran 1 suite in 9m49.275815995s
+
+Test Suite Failed
+make[1]: Leaving directory '/var/tmp/podman'
+time="2026-08-05T15:37:56Z" level=info msg="Sending SIGKILL to the qemu driver process 2811"
+time="2026-08-05T15:37:56Z" level=info msg="Sending SIGKILL to the host agent process 2786"
+time="2026-08-05T15:37:56Z" level=info msg="Removing *.pid *.sock *.tmp under \"/home/ubuntu/.lima/podman-ci\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/ha.pid\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/ha.sock\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/qemu.pid\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/qmp.sock\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/serial.sock\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/serialv.sock\""
+time="2026-08-05T15:37:56Z" level=info msg="Removing \"/home/ubuntu/.lima/podman-ci/ssh.sock\""
+time="2026-08-05T15:37:56Z" level=info msg="Deleted \"podman-ci\" (\"/home/ubuntu/.lima/podman-ci\")"
+##[error]Process completed with exit code 2.
+======================================================================
+7 | int remote root fedora-prior / lima | 31 lines
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+##[endgroup]
+##[start-action display=Set up QEMU;id=lima.setup-qemu]
+##[group]Run set -eux -o pipefail
+[36;1mset -eux -o pipefail[0m
+[36;1m[ "$(uname)" = "Linux" ][0m
+[36;1m[ "$(uname -m)" = "x86_64" ][0m
+[36;1msudo apt-get update -qq[0m
+[36;1msudo apt-get install -qqy --no-install-recommends ovmf qemu-system-x86 qemu-utils[0m
+[36;1msudo modprobe kvm[0m
+[36;1m# `sudo usermod -aG kvm $(whoami)` does not take an effect on GHA[0m
+[36;1msudo chown $(whoami) /dev/kvm[0m
+shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+##[endgroup]
+++ uname
++ '[' Linux = Linux ']'
+++ uname -m
++ '[' x86_64 = x86_64 ']'
++ sudo apt-get update -qq
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/noble-updates/main/binary-amd64/Packages.xz  File has unexpected size (1174064 != 1181160). Mirror sync in progress? [IP: 91.189.91.83 80]
+   Hashes of expected file:
+    - Filesize:1181160 [weak]
+    - SHA256:f54a8c1a17ef31925d83cb69c671fc52f9ddc7fade218503ce03e499d77211e8
+    - SHA1:68956a12f9c4ab42b46cd2b6c87a8dd6c8a5d7f9 [weak]
+    - MD5Sum:68b2fa70546b14679c0fc6cc2faeecbc [weak]
+   Release file created at: Wed, 05 Aug 2026 15:57:00 +0000
+E: Some index files failed to download. They have been ignored, or old ones used instead.
+##[error]Process completed with exit code 100.
+======================================================================
+8 | Validate source code changes | 31 lines
+[36;1mmake tests-included[0m
+shell: /usr/bin/bash -e {0}
+env:
+  DEST_BRANCH: 0c684fd2f6c5c832b1795ceb8cec70f79fb7bd35
+  PR_NUMBER: 29397
+  PR_HEAD: caabcb24c9ebdc88713229dcdda319d834a5f3c8
+  PR_BODY: ### Description
+ `libpod`:
+
+o`**: Reorder arguments in `logrus.Errorf` inside `ExecHTTPStartAndAttach`. Previously `err` was passed first, causing the error message string to render as the container ID format argument.
+al.go`**: Reorder arguments in `handleExitFile`. Previously `c.ID()` and `statusCodeStr` were swapped in `fmt.Errorf`, printing the container ID where status code was expected.
+`**: Replace `panic("at least one condition should be passed")` in `WaitForConditionWithInterval` with returning `define.ErrInvalidArg` error, preventing crashes in library and API server usage.
+  GOTOOLCHAIN: local
+  GITHUB_TOKEN: ***
+##[endgroup]
+hack/ci/pr-should-include-tests
+pr-should-include-tests: PR does not include changes in the 'tests' directory
+
+Please write a regression test for what you're fixing. Even if it
+seems trivial or obvious, try to add a test that will prevent
+regressions.
+
+If your change is minor, feel free to piggyback on already-written
+tests, possibly just adding a small step to a similar existing test.
+Every second counts in CI.
+
+If your commit really, truly does not need tests, you can proceed
+by asking a repo maintainer to set the 'No New Tests' github label.
+This will only be done when there's no reasonable alternative.
+make: *** [Makefile:775: tests-included] Error 1
+##[error]Process completed with exit code 2.
+======================================================================
+9 | Validate source code changes | 31 lines
+              setuptools-scm 8.0.4 depends on packaging>=20
+              setuptools-scm 8.0.3 depends on packaging>=20
+              setuptools-scm 8.0.2 depends on packaging>=20
+              setuptools-scm 8.0.1 depends on packaging>=20
+              setuptools-scm 7.1.0 depends on packaging>=20.0
+              setuptools-scm 7.0.5 depends on packaging>=20.0
+              setuptools-scm 7.0.4 depends on packaging>=20.0
+              setuptools-scm 7.0.3 depends on packaging>=20.0
+              setuptools-scm 7.0.2 depends on packaging>=20.0
+              setuptools-scm 7.0.1 depends on packaging>=20.0
+              setuptools-scm 6.4.2 depends on packaging>=20.0
+              setuptools-scm 6.4.1 depends on packaging>=20.0
+              setuptools-scm 6.4.0 depends on packaging>=20.0
+              setuptools-scm 6.3.2 depends on packaging>=20.0
+              setuptools-scm 6.3.1 depends on packaging>=20.0
+          
+          Additionally, some packages in these conflicts have no matching distributions available for your environment:
+              packaging
+          
+          To fix this you could try to:
+          1. loosen the range of package versions you've specified
+          2. remove package versions to allow pip to attempt to solve the dependency conflict
+          
+          ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+          [end of output]
+      
+      note: This error originates from a subprocess, and is likely not a problem with pip.
+    ERROR: Failed to build 'file:///home/ubuntu/.cache/pre-commit/repox2i25583' when installing build dependencies
+Check the log at /home/ubuntu/.cache/pre-commit/pre-commit.log
+make: *** [Makefile:284: lint] Error 3
+##[error]Process completed with exit code 2.
+======================================================================
+10 | windows machine hyperv | 18 lines
+  [TIMEDOUT] podman machine proxy settings propagation [It] ssh to running machine and check proxy settings
+  D:/a/podman/podman/pkg/machine/e2e/proxy_test.go:12
+
+Ran 78 of 88 Specs in 3007.363 seconds
+FAIL! - Suite Timeout Elapsed -- 77 Passed | 1 Failed | 0 Pending | 10 Skipped
+--- FAIL: TestMachine (3007.36s)
+FAIL
+
+Ginkgo ran 1 suite in 50m30.2118826s
+
+Test Suite Failed
+[31;1mException: [0mD:\a\podman\podman\hack\ci\win-lib.ps1:79[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  79 | [0m         [36;1mthrow "Exit code = '$exitCode' running $command at $($caller.[0m …[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mExit code = '1' running './bin/ginkgo.exe -vv --tags "remote exclude_graphdriver_btrfs containers_image_openpgp"[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1m--timeout=50m --trace --no-color   pkg/machine/e2e/.' at D:\a\podman\podman\winmake.ps1:102[0m
+##[error]Process completed with exit code 1.
+======================================================================
+11 | sys remote rootless fedora-current / lima | 30 lines
+ok 169 |090| events - pod labels in event attributes in 3359ms
+ok 170 |110| podman history - basic tests in 1250ms
+ok 171 |110| podman history - custom format in 688ms
+ok 172 |110| podman history - json in 1269ms
+ok 173 |110| podman image history Created in 687ms
+not ok 174 |125| podman import in 2137ms
+# tags: ci:parallel
+# (from function `bail-now' in file test/system/helpers.bash, line 230,
+#  from function `die' in file test/system/helpers.bash, line 958,
+#  from function `run_podman' in file test/system/helpers.bash, line 599,
+#  in test file test/system/125-import.bats, line 23)
+#   `run_podman import -q $archive' failed
+#
+# [06:01:27.609852902] $ /var/tmp/podman/bin/podman-remote --url=unix:///tmp/bats-run-Uo9oCW/suite/remotesystem.podman.zcLkAW.sock run --name c-import-t174-7z0wlgys quay.io/libpod/testimage:20241011 sh -c echo tN0Ravz2xB3X > /random.txt
+#
+# [06:01:28.078434864] $ /var/tmp/podman/bin/podman-remote --url=unix:///tmp/bats-run-Uo9oCW/suite/remotesystem.podman.zcLkAW.sock export c-import-t174-7z0wlgys -o /tmp/podman_bats.P6PkYV/archive.tar
+#
+# [06:01:28.578552339] $ /var/tmp/podman/bin/podman-remote --url=unix:///tmp/bats-run-Uo9oCW/suite/remotesystem.podman.zcLkAW.sock rm -t 0 -f c-import-t174-7z0wlgys
+# [06:01:28.982240238] c-import-t174-7z0wlgys
+#
+# [06:01:28.996523056] $ /var/tmp/podman/bin/podman-remote --url=unix:///tmp/bats-run-Uo9oCW/suite/remotesystem.podman.zcLkAW.sock import -q /tmp/podman_bats.P6PkYV/archive.tar
+# [06:01:29.379839460] Error: unable to import tarball: writing blob: adding layer with blob "sha256:66a82d1b24a9e48e91fd8db0ebaa1036ea9d000c9f18378a00a98ff57c7bdb3e"/""/"sha256:66a82d1b24a9e48e91fd8db0ebaa1036ea9d000c9f18378a00a98ff57c7bdb3e": unpacking failed (error: exit status 1; output: mkdir /bin: no such file or directory)
+# [06:01:29.385139186] [ rc=125 (** EXPECTED 0 **) ]
+# #/vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+# #| FAIL: exit code is 125; expected 0
+# #\^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# # [teardown]
+ok 175 |125| podman export, alter tarball, re-import in 8224ms
+ok 176 |126| podman commit --pause default in 6258ms
+ok 177 |130| podman kill - test signal handling in containers in 25522ms
+======================================================================
+12 | windows machine wsl | 18 lines
+  [FAIL] run cp commands [It] podman cp
+  D:/a/podman/podman/pkg/machine/e2e/cp_test.go:62
+
+Ran 68 of 88 Specs in 2581.290 seconds
+FAIL! -- 66 Passed | 2 Failed | 0 Pending | 20 Skipped
+--- FAIL: TestMachine (2581.29s)
+FAIL
+
+Ginkgo ran 1 suite in 43m16.569558s
+
+Test Suite Failed
+[31;1mException: [0mD:\a\podman\podman\hack\ci\win-lib.ps1:79[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  79 | [0m         [36;1mthrow "Exit code = '$exitCode' running $command at $($caller.[0m …[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mExit code = '1' running './bin/ginkgo.exe -vv --tags "remote exclude_graphdriver_btrfs containers_image_openpgp"[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1m--timeout=50m --trace --no-color   pkg/machine/e2e/.' at D:\a\podman\podman\winmake.ps1:102[0m
+##[error]Process completed with exit code 1.
+======================================================================
+13 | windows machine hyperv | 18 lines
+  [FAIL] run basic podman commands [It] Podman ops with port forwarding and gvproxy
+  D:/a/podman/podman/pkg/machine/e2e/basic_test.go:182
+
+Ran 79 of 88 Specs in 2722.827 seconds
+FAIL! -- 78 Passed | 1 Failed | 0 Pending | 9 Skipped
+--- FAIL: TestMachine (2722.83s)
+FAIL
+
+Ginkgo ran 1 suite in 45m43.3473495s
+
+Test Suite Failed
+[31;1mException: [0mD:\a\podman\podman\hack\ci\win-lib.ps1:79[0m
+[31;1m[0m[36;1mLine |[0m
+[31;1m[0m[36;1m[36;1m  79 | [0m         [36;1mthrow "Exit code = '$exitCode' running $command at $($caller.[0m …[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m     | [31;1m         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m     | [31;1mExit code = '1' running './bin/ginkgo.exe -vv --tags "remote exclude_graphdriver_btrfs containers_image_openpgp"[0m
+[31;1m[0m[36;1m[36;1m[0m[36;1m[0m[36;1m[31;1m[31;1m[36;1m[31;1m[36;1m     | [31;1m--timeout=50m --trace --no-color   pkg/machine/e2e/.' at D:\a\podman\podman\winmake.ps1:102[0m
+##[error]Process completed with exit code 1.
+======================================================================
+14 | sys local root fedora-prior / lima | 31 lines
+[36;1m    cat config >> config.tmp[0m
+[36;1m    mv config.tmp config[0m
+[36;1m  else[0m
+[36;1m    echo 'Include ~/.lima/*/ssh.config' > config[0m
+[36;1m  fi[0m
+[36;1m)[0m
+shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+##[endgroup]
++ mkdir -p -m 0700 /home/ubuntu/.ssh
++ cd /home/ubuntu/.ssh
++ '[' -e config ']'
++ echo 'Include ~/.lima/*/ssh.config'
+##[end-action id=lima.setup-ssh;outcome=success;conclusion=success;duration_ms=16]
+##[group]Run ./hack/ci/ci.sh sys local root fedora-prior
+[36;1m./hack/ci/ci.sh sys local root fedora-prior[0m
+shell: /usr/bin/bash -e {0}
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+##[endgroup]
+time="2026-08-06T10:49:12Z" level=info msg="Terminal is not available, proceeding without opening an editor"
+time="2026-08-06T10:49:12Z" level=info msg="Starting the instance \"podman-ci\" with internal VM driver \"qemu\""
+time="2026-08-06T10:49:12Z" level=info msg="Attempting to download the image" arch=x86_64 digest= location="https://objectstorage.us-ashburn-1.oraclecloud.com/n/id0lmbbwgcdv/b/podman-ci-vm-images/o/releases/20260722t094115z/fedora-prior.x86_64.qcow2.zst"
+Downloading the image (fedora-prior.x86_64.qcow2.zst)
+time="2026-08-06T10:52:49Z" level=fatal msg="failed to download \"https://objectstorage.us-ashburn-1.oraclecloud.com/n/id0lmbbwgcdv/b/podman-ci-vm-images/o/releases/20260722t094115z/fedora-prior.x86_64.qcow2.zst\": unexpected EOF"
+time="2026-08-06T10:52:49Z" level=info msg="The qemu driver process seems already stopped"
+time="2026-08-06T10:52:49Z" level=info msg="The host agent process seems already stopped"
+time="2026-08-06T10:52:49Z" level=info msg="Removing *.pid *.sock *.tmp under \"/home/ubuntu/.lima/podman-ci\""
+time="2026-08-06T10:52:49Z" level=info msg="Deleted \"podman-ci\" (\"/home/ubuntu/.lima/podman-ci\")"
+##[error]Process completed with exit code 1.
+======================================================================
+15 | macos machine applehv | 14 lines
+  [FAIL] podman machine reset [It] reset with running machine and other machines idle 
+  /Users/MacM1-2-worker/ci/podman/podman/pkg/machine/e2e/config_test.go:59
+
+Ran 79 of 84 Specs in 1711.739 seconds
+FAIL! -- 78 Passed | 1 Failed | 0 Pending | 5 Skipped
+--- FAIL: TestMachine (1711.74s)
+FAIL
+make[1]: *** [ginkgo-run] Error 1
+make: *** [localmachine] Error 2
+
+Ginkgo ran 1 suite in 28m43.263793709s
+
+Test Suite Failed
+##[error]Process completed with exit code 2.
+======================================================================
+16 | apiv2  root fedora-current / lima | 30 lines
+#    actual: 
+
+ok 1327 [23-containersArchive] POST containers/ArchiveVolCtrQRekz/exec : status=201
+ok 1328 [23-containersArchive] POST containers/ArchiveVolCtrQRekz/exec : .Id ('67a11d71e7897d5c1fcb7bc1cbb40fb0f4a7a5a5892eac966532ab6ca427687e') ~ [0-9a-f]\{64\}
+ok 1329 [23-containersArchive] POST exec/67a11d71e7897d5c1fcb7bc1cbb40fb0f4a7a5a5892eac966532ab6ca427687e/start [-d {}] : status=200
+not ok 1330 [23-containersArchive] POST exec/67a11d71e7897d5c1fcb7bc1cbb40fb0f4a7a5a5892eac966532ab6ca427687e/start [-d {}] : output
+#  expected: 
+volcontent
+#    actual: 
+
+ok 1331 [25-containersMore] GET libpod/containers/nonesuch/exists : status=404
+ok 1332 [25-containersMore] GET libpod/containers/foo/exists : status=204
+ok 1333 [25-containersMore] POST libpod/containers/foo/pause [-d {}] : status=204
+ok 1334 [25-containersMore] GET libpod/containers/foo/json : status=200
+ok 1335 [25-containersMore] GET libpod/containers/foo/json : .Id ('479b3c334be0348ea0b5e569bf7bcaa86b246c3be4609b6995c7aad23893f050') ~ [0-9a-f]\{64\}
+ok 1336 [25-containersMore] GET libpod/containers/foo/json : .State.Status=paused
+ok 1337 [25-containersMore] GET libpod/containers/foo/json : .ImageName=quay.io/libpod/testimage:20241011
+ok 1338 [25-containersMore] GET libpod/containers/foo/json : .Config.Cmd[0]=top
+ok 1339 [25-containersMore] GET libpod/containers/foo/json : .Name=foo
+ok 1340 [25-containersMore] POST libpod/containers/foo/unpause [-d {}] : status=204
+ok 1341 [25-containersMore] GET libpod/containers/foo/json : status=200
+ok 1342 [25-containersMore] GET libpod/containers/foo/json : .Id ('479b3c334be0348ea0b5e569bf7bcaa86b246c3be4609b6995c7aad23893f050') ~ [0-9a-f]\{64\}
+ok 1343 [25-containersMore] GET libpod/containers/foo/json : .State.Status=running
+ok 1344 [25-containersMore] GET libpod/containers/foo/json : .ImageName=quay.io/libpod/testimage:20241011
+ok 1345 [25-containersMore] GET libpod/containers/foo/json : .Config.Cmd[0]=top
+ok 1346 [25-containersMore] GET libpod/containers/foo/json : .Name=foo
+ok 1347 [25-containersMore] GET libpod/containers/foo/json : .Config.StopSignal=SIGTERM
+ok 1348 [25-containersMore] GET libpod/containers/foo/json : .Config.Entrypoint[0]=sh
+ok 1349 [25-containersMore] GET libpod/containers/foo/json : .Config.Entrypoint[1]=-c
+ok 1350 [25-containersMore] GET /v4.0.0/libpod/containers/foo/json : status=200
+======================================================================
+17 | apiv2  rootless fedora-current / lima | 30 lines
+#    actual: 
+
+ok 1302 [23-containersArchive] POST containers/ArchiveVolCtrwGE7h/exec : status=201
+ok 1303 [23-containersArchive] POST containers/ArchiveVolCtrwGE7h/exec : .Id ('7cc5686fce08242bb9514863d4ea77066916baeef3340545491e0150a496e175') ~ [0-9a-f]\{64\}
+ok 1304 [23-containersArchive] POST exec/7cc5686fce08242bb9514863d4ea77066916baeef3340545491e0150a496e175/start [-d {}] : status=200
+not ok 1305 [23-containersArchive] POST exec/7cc5686fce08242bb9514863d4ea77066916baeef3340545491e0150a496e175/start [-d {}] : output
+#  expected: 
+volcontent
+#    actual: 
+
+ok 1306 [25-containersMore] GET libpod/containers/nonesuch/exists : status=404
+ok 1307 [25-containersMore] GET libpod/containers/foo/exists : status=204
+ok 1308 [25-containersMore] POST libpod/containers/foo/pause [-d {}] : status=204
+ok 1309 [25-containersMore] GET libpod/containers/foo/json : status=200
+ok 1310 [25-containersMore] GET libpod/containers/foo/json : .Id ('0695ff1596f5e16cde290c4f13edace851c7adf9f2d91ca42874ad15b044bc8e') ~ [0-9a-f]\{64\}
+ok 1311 [25-containersMore] GET libpod/containers/foo/json : .State.Status=paused
+ok 1312 [25-containersMore] GET libpod/containers/foo/json : .ImageName=quay.io/libpod/testimage:20241011
+ok 1313 [25-containersMore] GET libpod/containers/foo/json : .Config.Cmd[0]=top
+ok 1314 [25-containersMore] GET libpod/containers/foo/json : .Name=foo
+ok 1315 [25-containersMore] POST libpod/containers/foo/unpause [-d {}] : status=204
+ok 1316 [25-containersMore] GET libpod/containers/foo/json : status=200
+ok 1317 [25-containersMore] GET libpod/containers/foo/json : .Id ('0695ff1596f5e16cde290c4f13edace851c7adf9f2d91ca42874ad15b044bc8e') ~ [0-9a-f]\{64\}
+ok 1318 [25-containersMore] GET libpod/containers/foo/json : .State.Status=running
+ok 1319 [25-containersMore] GET libpod/containers/foo/json : .ImageName=quay.io/libpod/testimage:20241011
+ok 1320 [25-containersMore] GET libpod/containers/foo/json : .Config.Cmd[0]=top
+ok 1321 [25-containersMore] GET libpod/containers/foo/json : .Name=foo
+ok 1322 [25-containersMore] GET libpod/containers/foo/json : .Config.StopSignal=SIGTERM
+ok 1323 [25-containersMore] GET libpod/containers/foo/json : .Config.Entrypoint[0]=sh
+ok 1324 [25-containersMore] GET libpod/containers/foo/json : .Config.Entrypoint[1]=-c
+ok 1325 [25-containersMore] GET /v4.0.0/libpod/containers/foo/json : status=200
+======================================================================
+18 | sys local rootless fedora-current / lima | 30 lines
+ok 266 |252| quadlet kube - start error in 6687ms
+ok 267 |252| quadlet kube - pod without containers in 6520ms
+ok 268 |252| quadlet - image files in 18865ms
+ok 269 |252| quadlet - kube oneshot in 7134ms
+ok 270 |252| quadlet - kube down force in 6488ms
+not ok 271 |252| quadlet - image tag in 5987ms
+# tags: ci:parallel
+# (from function `systemctl_start' in file test/system/helpers.systemd.bash, line 91,
+#  from function `service_setup' in file test/system/252-quadlet.bats, line 117,
+#  in test file test/system/252-quadlet.bats, line 1760)
+#   `service_setup $container_service' failed
+#
+# [11:24:19.566279629] $ /var/tmp/podman/bin/podman  create -q quay.io/libpod/testimage:20241011 true
+# [11:24:19.975772696] 0a49588e0ff1132267aaa907104df7df4528d606ca1800ba452c34ef9932e2ef
+#
+# [11:24:19.986820789] $ /var/tmp/podman/bin/podman  commit -q 0a49588e0ff1132267aaa907104df7df4528d606ca1800ba452c34ef9932e2ef localhost/i-t271-xj9pxzdu:uMGjFgtGuv
+# [11:24:20.707933165] eee0d1ff9b66bd288e41f7946fe95551cc687026d5b24be1ff2a093eb75e32aa
+#
+# [11:24:20.724902270] $ /var/tmp/podman/bin/podman  rm 0a49588e0ff1132267aaa907104df7df4528d606ca1800ba452c34ef9932e2ef
+# [11:24:21.170590298] 0a49588e0ff1132267aaa907104df7df4528d606ca1800ba452c34ef9932e2ef
+#
+# [11:24:21.190879265] $ /var/tmp/podman/bin/podman  image save --format docker-archive --output /tmp/podman_bats.aPhgPR/archive-file.tar localhost/i-t271-xj9pxzdu:uMGjFgtGuv
+# [11:24:21.871642036] Copying blob sha256:b66a884aaf08f1c410c61682a7072d68a0d837ba8dc16ff13b9509bdceb32fd2
+# Copying blob sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef
+# Copying blob sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef
+# Copying config sha256:eee0d1ff9b66bd288e41f7946fe95551cc687026d5b24be1ff2a093eb75e32aa
+# Writing manifest to image destination
+#
+# [11:24:21.884659982] $ /var/tmp/podman/bin/podman  image rm localhost/i-t271-xj9pxzdu:uMGjFgtGuv
+# [11:24:22.171619960] Untagged: localhost/i-t271-xj9pxzdu:uMGjFgtGuv
+======================================================================
+19 | int local root debian-sid / lima | 31 lines
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+  PR_NUMBER: 
+  PR_TITLE: 
+  GITHUB_RUN_ID: 31176180260
+##[endgroup]
++ mkdir -p -m 0700 /home/ubuntu/.ssh
++ cd /home/ubuntu/.ssh
++ '[' -e config ']'
++ echo 'Include ~/.lima/*/ssh.config'
+##[end-action id=lima.setup-ssh;outcome=success;conclusion=success;duration_ms=15]
+##[group]Run ./hack/ci/ci.sh int local root debian-sid
+[36;1m./hack/ci/ci.sh int local root debian-sid[0m
+shell: /usr/bin/bash -e {0}
+env:
+  AUTOMATION_RELEASE: 20260722t094115z
+  PR_NUMBER: 
+  PR_TITLE: 
+  GITHUB_RUN_ID: 31176180260
+##[endgroup]
+##[group]Starting VM
+time="2026-08-07T12:11:14Z" level=info msg="Terminal is not available, proceeding without opening an editor"
+time="2026-08-07T12:11:14Z" level=info msg="Starting the instance \"podman-ci\" with internal VM driver \"qemu\""
+time="2026-08-07T12:11:14Z" level=info msg="Attempting to download the image" arch=x86_64 digest= location="https://objectstorage.us-ashburn-1.oraclecloud.com/n/id0lmbbwgcdv/b/podman-ci-vm-images/o/releases/20260722t094115z/debian-sid.x86_64.qcow2.zst"
+Downloading the image (debian-sid.x86_64.qcow2.zst)
+time="2026-08-07T12:23:49Z" level=fatal msg="failed to download \"https://objectstorage.us-ashburn-1.oraclecloud.com/n/id0lmbbwgcdv/b/podman-ci-vm-images/o/releases/20260722t094115z/debian-sid.x86_64.qcow2.zst\": unexpected EOF"
+time="2026-08-07T12:23:49Z" level=info msg="The qemu driver process seems already stopped"
+time="2026-08-07T12:23:49Z" level=info msg="The host agent process seems already stopped"
+time="2026-08-07T12:23:49Z" level=info msg="Removing *.pid *.sock *.tmp under \"/home/ubuntu/.lima/podman-ci\""
+time="2026-08-07T12:23:49Z" level=info msg="Deleted \"podman-ci\" (\"/home/ubuntu/.lima/podman-ci\")"
+##[error]Process completed with exit code 1.
