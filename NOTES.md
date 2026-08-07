@@ -123,3 +123,28 @@ Downloading the log archives repeatedly failed with
 ChunkedEncodingError - the same class of transient network failure
 this tool is built to categorise. Retry-and-skip logic was added for
 exactly the reason the tool exists.
+
+## RESULT: llama3.1:8b scores 15% (3/20) against hand labels
+
+Hand labels (n=20): timing 10, network 4, real-failure 3,
+infrastructure 1, unknown 2.
+
+LLM output: resource 10, real-failure 10. Nothing else. It never
+emitted timing, network, infrastructure or unknown, despite all four
+occurring in the data. Mode collapse onto two labels, not classification.
+
+Baselines it loses to:
+- always answer "timing": 10/20 = 50%
+- random over 6 classes: ~17%
+- regex rules: 4/4 correct on network cases, where the LLM got 0/4
+
+Never returned "unknown"; reported "high" confidence on all 20,
+including two cases where the excerpt genuinely lacks the cause.
+Self-reported confidence is unusable here.
+
+To test one at a time:
+1. Categories are bare words with no definitions or exclusions
+2. Prompt asks for the label first, so the reason justifies a
+   pre-chosen answer
+3. Nothing makes declining acceptable, so "unknown" is never used
+4. 4000-char truncation may cut the marker in longer excerpts
