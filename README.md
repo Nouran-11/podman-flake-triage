@@ -4,6 +4,12 @@ Automated triage of flaky test failures in Podman's GitHub Actions CI.
 
 Built during MLH Global Hack Week: Agents (Aug 7-13, 2026).
 
+## Result so far
+
+Across 16 real CI failures from Podman's `ci` workflow:
+**182,049 log lines reduced to 496 (99.7%)** while preserving the
+failure summary, test name, and source location.
+
 ## Status
 Work in progress.
 
