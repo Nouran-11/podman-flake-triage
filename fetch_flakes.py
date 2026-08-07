@@ -154,7 +154,21 @@ def main():
             continue
 
         jobs = failed_jobs(s, run["id"])
-        path, downloaded = fetch_logs(s, run["id"], run["run_attempt"])
+        path, downloaded = None, False
+        for attempt_no in range(3):
+            try:
+                path, downloaded = fetch_logs(s, run["id"], run["run_attempt"])
+                break
+            except Exception as e:
+                print(f"    download failed ({type(e).__name__}), retry {attempt_no + 1}/3")
+                stale = LOGS / f"{run['id']}_{run['run_attempt']}.part"
+                if stale.exists():
+                    stale.unlink()
+                time.sleep(5)
+        else:
+            print(f"    giving up on run {run['id']}, moving on")
+            save_index(index)
+            continue
 
         index[key] = {
             "run_id": run["id"],
