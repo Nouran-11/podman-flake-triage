@@ -148,3 +148,23 @@ To test one at a time:
    pre-chosen answer
 3. Nothing makes declining acceptable, so "unknown" is never used
 4. 4000-char truncation may cut the marker in longer excerpts
+
+## Prompt v2: 80% (16/20), up from 15%
+
+Same model (llama3.1:8b), same 20 failures. Four changes:
+1. Categories defined with signals and exclusions, not bare words
+2. Model must quote the evidence line BEFORE choosing a label
+3. "unknown" declared explicitly correct when evidence is missing
+4. Truncation 4000 -> 8000 chars
+
+Effect: mode collapse gone. All six... four used categories appear.
+Every answer quotes a real line from the log - no fabricated causes.
+
+The 4 disagreements are all boundary cases, not errors:
+- #6, #12: I said unknown, model said timing. Its guess is defensible.
+- #11, #18: I said timing, model said infrastructure. Genuinely ambiguous
+  (mkdir /bin during unpack; systemctl_start failed).
+
+Still unfixed: model returned "unknown" 0/20 despite the prompt saying
+it is correct to do so. Small models appear reluctant to decline even
+when instructed. Banning "resource" worked; encouraging "unknown" did not.
