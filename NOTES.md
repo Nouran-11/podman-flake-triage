@@ -81,3 +81,45 @@ in this sample.
 - macos applehv: 78 Passed | 1 Failed | 5 Skipped
 - int remote rootless: 2195 Passed | 1 Failed | 335 Skipped
 One failure out of thousands is very unlikely to be a real regression.
+
+## KEY INSIGHT: frameworks differ in WHERE the failure appears
+
+Not just in marker syntax, but in position:
+- Ginkgo prints a "Summarizing 1 Failure" block at the END of the run
+- bats prints "not ok <n>" AT THE MOMENT the test fails, which can be
+  thousands of lines before the end of the log
+- Go test prints "--- FAIL:" inline too
+
+Consequence: any extraction anchored on the TAIL of the log silently
+misses bats failures entirely. Searching backwards ~400 lines from
+##[error] is not enough. The whole log has to be scanned for markers.
+
+## Failed attempt worth recording
+
+First fix searched backwards 400 lines for markers including
+"Error 1/2/3". That matched the trailing make line
+  make: *** [Makefile:749: localapiv2-bash] Error 3
+which sits at the very end of every failed make-wrapped job. Anchoring
+5 lines above it landed in PASSING output ("ok 2220", "ok 2221").
+
+Lesson: make/shell exit lines are not test-failure markers. They tell
+you a command failed, not which test failed. Marker list must be
+restricted to genuine test-framework output:
+  "not ok ", "[FAIL]", "--- FAIL:", "Summarizing"
+
+## Sample sizes so far
+- 15 runs cached (5 permanently failed to download)
+- 20 failures extracted
+- 190,924 log lines -> ~378 kept (99.8%)
+- 4/20 (20%) classified by regex, no LLM
+
+## Recurring flake candidates in this sample
+- windows machine hyperv: 4 of 20 failures
+- windows machine wsl: 1 more (5/20 = windows machine e2e family)
+- qcow2.zst download EOF: fedora-prior + debian-sid, 2 different days
+
+## Meta note
+Downloading the log archives repeatedly failed with
+ChunkedEncodingError - the same class of transient network failure
+this tool is built to categorise. Retry-and-skip logic was added for
+exactly the reason the tool exists.

@@ -35,8 +35,23 @@ for key, entry in index.items():
             continue
 
         last = error_lines[-1]
-        start = max(0, last - CONTEXT_LINES)
-        excerpt = "\n".join(line[29:] for line in lines[start:last + 1])
+
+        # Ginkgo prints a summary at the end; bats prints "not ok" at the
+        # moment of failure, which can be thousands of lines earlier. So
+        # search the WHOLE log for a real test-failure marker, not just
+        # the tail. Fall back to a window before ##[error] if none found.
+        MARKERS = ("not ok ", "[FAIL]", "--- FAIL:", "Summarizing")
+        hits = [i for i, ln in enumerate(lines) if any(m in ln for m in MARKERS)]
+
+        if hits:
+            anchor = hits[-1]
+            start = max(0, anchor - 5)
+            end = min(len(lines), anchor + 25)
+        else:
+            start = max(0, last - CONTEXT_LINES)
+            end = last + 1
+
+        excerpt = "\n".join(line[29:] for line in lines[start:end])
 
         results.append({
             "run_id": entry["run_id"],
