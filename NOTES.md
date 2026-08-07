@@ -182,3 +182,27 @@ when instructed. Banning "resource" worked; encouraging "unknown" did not.
   name matching has a gap. Currently skipped silently; should at least
   be counted and reported.
 - Accuracy remains measured on the original hand-labelled n=20 only.
+
+## Cross-run report findings (102 failures, 57 runs)
+
+Job frequency: windows machine hyperv 15, macos machine applehv 11,
+Validate source code changes 11. Top 3 = 36% of all failures.
+
+ALL 8 suite timeouts are windows machine hyperv. Zero on macos or wsl.
+This is a suite-budget problem specific to one job, not a flaky test -
+the fix is a bigger --timeout or fewer specs, not a test rewrite.
+
+Likely REAL regression, not a flake:
+  [FAIL] Podman build [It] podman remote build uses the server seccomp
+  default (#24318)
+Failed on 5 platforms in the same window: debian-sid, fedora-current,
+fedora-prior, fedora-rawhide, rootless fedora-current. A flake does not
+hit five OSes at once. Test name references an existing issue.
+
+Cross-platform machine failures (applehv AND hyperv):
+  - machine init --now with --update-connection
+  - set machine cpus, disk, memory
+Shared machine code, not platform-specific.
+
+This is the value of grouping: none of these are visible when triaging
+one failure at a time.
