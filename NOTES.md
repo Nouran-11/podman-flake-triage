@@ -168,3 +168,17 @@ The 4 disagreements are all boundary cases, not errors:
 Still unfixed: model returned "unknown" 0/20 despite the prompt saying
 it is correct to do so. Small models appear reluctant to decline even
 when instructed. Banning "resource" worked; encouraging "unknown" did not.
+
+## Scaled to 57 runs / 102 failures
+
+- 102/102 excerpts still contain a real failure marker
+- 1,423,501 log lines -> 3,090 (99.8% reduction)
+- Regex rules: 6/102 (6%), down from 20% on the n=20 sample.
+  Two hardcoded patterns do not generalise; the LLM does the real work
+  at scale. Rules stay valuable because they are exact and free where
+  they apply, not because they cover much.
+- 14 failed jobs had no matching log file in the archive (~12%).
+  Cause not yet identified - either GitHub omits some job logs or the
+  name matching has a gap. Currently skipped silently; should at least
+  be counted and reported.
+- Accuracy remains measured on the original hand-labelled n=20 only.

@@ -1,0 +1,16 @@
+{
+  "windows machine hyperv": "timing",
+  "sys local root fedora-rawhide / lima": "timing",
+  "Validate source code changes": "infrastructure",
+  "build fedora-current / lima": "network",
+  "int remote rootless fedora-current / lima": "unknown",
+  "int remote root fedora-prior / lima": "network",
+  "sys remote rootless fedora-current / lima": "timing",
+  "windows machine wsl": "unknown",
+  "sys local root fedora-prior / lima": "network",
+  "macos machine applehv": "timing",
+  "apiv2  root fedora-current / lima": "timing",
+  "apiv2  rootless fedora-current / lima": "timing",
+  "sys local rootless fedora-current / lima": "timing",
+  "int local root debian-sid / lima": "network"
+}
