@@ -206,3 +206,42 @@ Shared machine code, not platform-specific.
 
 This is the value of grouping: none of these are visible when triaging
 one failure at a time.
+
+## Signature clustering: 102 failures -> 47 signatures
+
+Normalising ports, hashes, timestamps and test IDs out of the error line
+reveals clusters invisible to test-name grouping.
+
+Largest clusters:
+- rootless pasta networking: 12 failures across 3 signatures
+  (connect/disconnect w/ port forwarding, same + pasta forwarder,
+  network reload - pasta forwarder), plus 4x "netavark: no static ips
+  provided" on the same four jobs. ~16 failures, likely one cause.
+- lima hostagent "ha.pid did not start up": 6x across FOUR different
+  jobs (apiv2, compose_v2, unit, upgrade). Looks like four problems in
+  a per-job view; is one VM startup failure.
+- windows machine hyperv suite timeout: 6x, single job.
+- quadlet nested_server_name assertion: 5x across 5 jobs.
+- seccomp #24318: 5x across 5 jobs.
+
+## Classifier self-consistency problem (found via clustering)
+
+The same normalised signature receives different categories on different
+occurrences:
+  hostagent ha.pid        -> infrastructure AND timing
+  seccomp #24318          -> real-failure AND timing
+  network reload pasta    -> real-failure AND timing
+  set machine cpus/disk   -> infrastructure AND real-failure
+
+Identical evidence, different verdict. Clusters act as their own ground
+truth here - no extra hand-labelling needed to detect the inconsistency.
+
+Fix: classify once per signature rather than per occurrence. Gives
+consistency by construction and cuts LLM calls by ~55% (47 vs 102).
+
+## ANSI stripping recovered 10% of the dataset
+
+Windows/PowerShell logs carry colour escape codes that made lines
+unquotable. Stripping them at extraction dropped empty-evidence results
+from 11 to 1, and all five categories are now in use (was 4).
+Preprocessing fix, not a model or prompt change.

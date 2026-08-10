@@ -1,11 +1,17 @@
 import json
+import re
 import zipfile
+
+# Windows/PowerShell logs are full of colour escape codes, which make
+# lines unquotable for the LLM. Strip them at extraction time.
+ANSI = re.compile(r'\x1b\[[0-9;]*[a-zA-Z]|\[[0-9;]+m|\[0m')
 from pathlib import Path
 
 CONTEXT_LINES = 30
 
 index = json.load(open("cache/index.json"))
 results = []
+skipped = []
 
 for key, entry in index.items():
     if not entry.get("logs_cached"):
@@ -25,7 +31,7 @@ for key, entry in index.items():
                 match = n
                 break
         if match is None:
-            print(f"  no log file for job: {job['name']}")
+            skipped.append(job["name"])
             continue
 
         lines = z.read(match).decode("utf-8", errors="replace").splitlines()
@@ -51,7 +57,7 @@ for key, entry in index.items():
             start = max(0, last - CONTEXT_LINES)
             end = last + 1
 
-        excerpt = "\n".join(line[29:] for line in lines[start:end])
+        excerpt = "\n".join(ANSI.sub("", line[29:]) for line in lines[start:end])
 
         results.append({
             "run_id": entry["run_id"],
@@ -67,6 +73,8 @@ with open("extracted.json", "w") as f:
 
 total_in = sum(r["total_lines"] for r in results)
 total_out = sum(r["excerpt_lines"] for r in results)
-print(f"\nextracted {len(results)} failures")
+total = len(results) + len(skipped)
+print(f"\nextracted {len(results)} of {total} failed jobs "
+      f"({len(skipped)} had no matching log file in the archive)")
 print(f"{total_in} log lines -> {total_out} lines kept "
       f"({100 * (1 - total_out / total_in):.1f}% reduction)")
