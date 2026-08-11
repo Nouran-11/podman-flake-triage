@@ -7,3 +7,4 @@ __pycache__/
 *.zip
 extracted.json
 .pytest_cache/
+.DS_Store
