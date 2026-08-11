@@ -284,3 +284,24 @@ five unrelated failures.
 Largest cluster is now rootless networking: ~17 failures across four
 signatures (network reload, network reload - pasta forwarder,
 connect/disconnect with port forwarding, same + pasta forwarder).
+
+## CORRECTION: occurrence count != recurrence
+
+report_v2 distinguishes failures that recur across separate runs from
+failures that hit many jobs within ONE run. Same raw count, opposite
+meaning:
+
+  lima hostagent ha.pid    6 occurrences / 6 distinct runs, Jul 28-Aug 5
+                           -> genuinely recurring infrastructure flake
+  seccomp #24318           5 occurrences / 1 run, Jul 31
+                           -> every platform failed on one commit;
+                              regression signal, not a flake
+  quadlet mixed .quadlets  5 occurrences / 1 run, Jul 28  -> same
+  network connect/disconn  4 occurrences / 1 run, Jul 27  -> same
+  network reload           5 occurrences / 2 runs         -> mixed
+
+This supersedes the earlier note describing ~17 rootless networking
+failures as one recurring cluster: by raw count that is right, but most
+of those occurrences are simultaneous within single runs.
+
+Report now sorts by distinct-run count rather than raw occurrences.
