@@ -42,6 +42,19 @@ Same model, same data, same 20 failures. 15% -> 80%.
 The 4 remaining disagreements are all category-boundary cases, not
 hallucinations - every v2 answer quotes a real line from the log.
 
+## Tests
+
+```
+pip install -r requirements.txt
+python3 -m pytest test_signatures.py -v
+```
+
+Nine tests covering signature extraction, including the three cases the
+pipeline depends on: suite summaries must not outrank named test
+failures, bats failures can sit thousands of lines above the end of a
+log, and the same flake with different port numbers must collapse to one
+signature.
+
 ## Pipeline
 
 1. `fetch_flakes.py` - pull failed runs, cache log archives locally
