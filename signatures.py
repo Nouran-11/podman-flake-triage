@@ -31,14 +31,32 @@ def normalise(line):
     return " ".join(line.split())[:110]
 
 
+# Lines that name a specific failing test are far more diagnostic than
+# suite-level summaries, which are identical across unrelated failures.
+NAMED = ("[FAIL]", "[TIMEDOUT]", "not ok ", "--- FAIL:")
+
+# Generic lines that must never become a signature on their own: they
+# appear in every failure of that framework and merge unrelated causes.
+GENERIC = ("FAIL! --", "FAIL! - Suite Timeout", "Test Suite Failed",
+           "Ginkgo ran", "Summarizing")
+
+
 def signature(excerpt):
-    """The most diagnostic line in the excerpt, with variable parts removed."""
-    best = None
+    """The most diagnostic line in the excerpt, with variable parts removed.
+
+    Prefers a line naming the failing test over a suite summary; falls
+    back to any error-bearing line only if no named failure is present.
+    """
+    named, other = None, None
     for line in excerpt.splitlines():
         s = line.strip()
-        if len(s) < 15:
+        if len(s) < 15 or any(g in s for g in GENERIC):
             continue
-        if any(k in s for k in SIGNAL):
-            if best is None or len(s) > len(best):
-                best = s
+        if any(k in s for k in NAMED):
+            if named is None or len(s) > len(named):
+                named = s
+        elif any(k in s for k in SIGNAL):
+            if other is None or len(s) > len(other):
+                other = s
+    best = named or other
     return normalise(best) if best else None

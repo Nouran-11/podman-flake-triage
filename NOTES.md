@@ -266,3 +266,21 @@ label now propagates to every occurrence.
 
 Fix: prioritise lines naming a test ([FAIL], [TIMEDOUT], not ok) over
 suite summary lines, rather than choosing by length.
+
+## Fixed signature over-merging
+
+Preferring lines that name a failing test ([FAIL], [TIMEDOUT], not ok)
+over suite summaries, and excluding generic lines outright.
+
+47 -> 53 signatures. The generic "FAIL! -- N Passed | N Failed" signature
+is gone; splitting it revealed two clusters it had been hiding:
+  - quadlet verb - install directory with mixed individual...  5x
+  - podman network reload                                      5x
+
+Tradeoff: LLM call reduction fell from 54% to 48%. More precise grouping
+deduplicates less. Worth it - over-merging propagated a single verdict to
+five unrelated failures.
+
+Largest cluster is now rootless networking: ~17 failures across four
+signatures (network reload, network reload - pasta forwarder,
+connect/disconnect with port forwarding, same + pasta forwarder).
