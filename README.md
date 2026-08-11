@@ -2,8 +2,6 @@
 
 Automated triage of flaky test failures in Podman's GitHub Actions CI.
 
-Built during MLH Global Hack Week: Agents (Aug 7-13, 2026), tested
-against real failures from `podman-container-tools/podman`.
 
 ## Why
 
