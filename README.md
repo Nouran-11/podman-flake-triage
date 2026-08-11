@@ -11,15 +11,15 @@ A single failed CI run produces ~28 MB of logs across 56 jobs, of
 which 3-4 actually failed. Maintainers read those by hand to work out
 whether a red build is a real bug or a flake.
 
-## Results (20 real failures, Aug 2026)
+## Results (102 real failures from 57 runs, Aug 2026)
 
 | | |
 |---|---|
-| Log reduction | 190,924 lines -> 530 (99.7%) |
-| Excerpts containing the real failure | 20/20 |
-| Classified by regex alone, no LLM | 4/20 |
-| LLM agreement with hand labels, prompt v1 | 15% |
-| LLM agreement with hand labels, prompt v2 | **80%** |
+| Log reduction | 1,423,501 lines to 9,653 (99.3%) |
+| Excerpts containing the real failure | 102/102 |
+| Failures grouped into error signatures | 102 into 53 |
+| LLM agreement with hand labels, prompt v1 | 15% (n=20) |
+| LLM agreement with hand labels, prompt v2 | **80%** (n=20) |
 
 Model: `llama3.1:8b`, run locally via Ollama. No API key, no cost,
 no log data leaving the machine.
@@ -55,6 +55,12 @@ failures, bats failures can sit thousands of lines above the end of a
 log, and the same flake with different port numbers must collapse to one
 signature.
 
+## Charts
+
+![Log reduction](charts/fig1_log_reduction.png)
+
+![Root-cause categories](charts/fig3_categories.png)
+
 ## Pipeline
 
 1. `fetch_flakes.py` - pull failed runs, cache log archives locally
@@ -74,8 +80,9 @@ correctly by regex, where prompt v1 got 0/4.
 - Test frameworks differ in *where* failures appear: Ginkgo summarises
   at the end, bats prints `not ok` at the moment of failure - possibly
   thousands of lines earlier. Tail-only extraction misses bats entirely.
-- 5 of 20 failures were Windows machine e2e; three were `[TIMEDOUT]`
-  with the suite running 2952s, 2977s and 3007s against a 3000s limit.
+- Windows machine e2e dominates: all 8 suite timeouts in the sample
+  belong to that one job, running 2952s, 2977s and 3007s against a
+  3000s limit. A suite-budget problem, not a flaky test.
   A suite-budget problem, not a test bug.
 - The same apiv2 exec test failed under both root and rootless in one
   run, expecting `volcontent` and receiving empty output - a clean
