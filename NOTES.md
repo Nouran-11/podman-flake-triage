@@ -245,3 +245,24 @@ Windows/PowerShell logs carry colour escape codes that made lines
 unquotable. Stripping them at extraction dropped empty-evidence results
 from 11 to 1, and all five categories are now in use (was 4).
 Preprocessing fix, not a model or prompt change.
+
+## Classify per signature, not per occurrence
+
+102 failures -> 47 signatures. One LLM call per signature.
+- 54% fewer LLM calls (102 -> 47)
+- 6 signatures previously received contradictory labels across their
+  occurrences; per-signature classification removes this by construction
+- 13 failures produced no usable signature; these fall back to
+  per-occurrence classification
+
+## LIMITATION: signature over-merging
+
+signature() picks the longest signal-bearing line, which is sometimes the
+generic Ginkgo summary rather than the failing test:
+  "FAIL! -- N Passed | N Failed | N Pending | N Skipped"  -> 5x, 3 jobs
+Five unrelated failures merged into one signature and all inherited a
+single verdict. Over-merging is worse than over-splitting: one wrong
+label now propagates to every occurrence.
+
+Fix: prioritise lines naming a test ([FAIL], [TIMEDOUT], not ok) over
+suite summary lines, rather than choosing by length.
